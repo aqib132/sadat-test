@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  php_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+    ports:
+      - "8000:8000"
+
+  redis:
+    build:
+      context: .
+      dockerfile: Dockerfile.redis
+    ports:
+      - "6379:6379"
+
+  mysql:
+    build:
+      context: .
+      dockerfile: Dockerfile.mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: staytus123
+      MYSQL_DATABASE: sadat
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
