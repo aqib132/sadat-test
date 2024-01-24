@@ -26,6 +26,7 @@ jobs:
         IMAGE_NAME: aqibjavaid817/sadat-app
       run: |
         echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-        docker build -t $IMAGE_NAME .
-        docker push $IMAGE_NAME
+        #docker build -t $IMAGE_NAME .
+        #docker push $IMAGE_NAME
         docker-compose build
+        docker-compose push 
