@@ -14,7 +14,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up Docker
-      uses: docker/setup-docker@v2
+      uses: docker/cli@v2
 
     - name: Build and push Docker image
       env:
@@ -23,5 +23,5 @@ jobs:
         IMAGE_NAME: aqibjavaid817/sadat-app
       run: |
         echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-        docker build -t  aqibjavaid817/sadat-app .
-        docker push aqibjavaid817/sadat-app
+        docker build -t $IMAGE_NAME .
+        docker push $IMAGE_NAME
