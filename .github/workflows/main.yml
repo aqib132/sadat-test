@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Publish Docker Image
 
 on:
   push:
@@ -6,27 +6,27 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-and-publish:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Docker
-      uses: docker/setup-docker@v2
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
 
-    - name: Build and push Docker images
+    - name: Set up QEMU (for multi-platform builds)
+      uses: docker/setup-qemu-action@v1
+
+    - name: Build and push Docker image
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        IMAGE_NAME: aqibjavaid817/sadat-app
       run: |
+        echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+        #docker build -t $IMAGE_NAME .
+        #docker push $IMAGE_NAME
         docker-compose build
-        echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-        docker-compose push
-
-    - name: Install SSH key
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-    - name: Deploy to EC2
-      run: |
-        ssh -o StrictHostKeyChecking=no ubuntu@54.211.80.32 "cd /var/php-app/sadat-test && docker-compose pull && docker-compose up -d"
+        docker-compose push 
