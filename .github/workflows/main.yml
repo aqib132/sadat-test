@@ -26,7 +26,14 @@ jobs:
         IMAGE_NAME: aqibjavaid817/sadat-app
       run: |
         echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-        #docker build -t $IMAGE_NAME .
-        #docker push $IMAGE_NAME
         docker-compose build
-        docker-compose push 
+        docker-compose push
+
+    - name: Install sshpass
+      run: sudo apt-get install -y sshpass
+
+    - name: Establish SSH Connection
+      env:
+        SSHPASS: ${{ secrets.SERVER_PASSWORD }}
+      run: |
+        sshpass -e ssh -o StrictHostKeyChecking=no -p 22 sadat@54.211.80.32 "cd /var/php-app/sadat-app && git pull && docker-compose up -d"
