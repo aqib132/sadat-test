@@ -36,4 +36,4 @@ jobs:
       env:
         SSHPASS: ${{ secrets.SERVER_PASSWORD }}
       run: |
-        sshpass -e ssh -o StrictHostKeyChecking=no -p 22 sadat@54.211.80.32 "cd /var/php-app/sadat-test && git pull && docker-compose up -d"
+        sshpass -e ssh -o StrictHostKeyChecking=no -p 22 sadat@54.211.80.32 "cd /var/php-app/sadat-test && ./deploy.sh"
