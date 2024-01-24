@@ -25,7 +25,8 @@ jobs:
         IMAGE_NAME: aqibjavaid817/sadat-app
       run: |
         docker buildx create --use
-        docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/$IMAGE_NAME --push .
+        docker push $IMAGE_NAME
+        #docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/$IMAGE_NAME --push .
 
         # If you want to tag the Docker image with a specific version or commit SHA, you can use the following:
         # docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/$IMAGE_NAME:$GITHUB_SHA --push .
