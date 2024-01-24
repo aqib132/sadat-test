@@ -21,9 +21,9 @@ jobs:
 
     - name: Build and push Docker image
       env:
-        DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         IMAGE_NAME: aqibjavaid817/sadat-app
       run: |
-        docker build -t $IMAGE_NAME .
-        echo $DOCKER_TOKEN | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-        docker push $IMAGE_NAME
+        echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        docker build -t ghcr.io/$IMAGE_NAME .
+        docker push ghcr.io/$IMAGE_NAME
