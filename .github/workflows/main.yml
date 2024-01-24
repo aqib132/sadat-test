@@ -24,7 +24,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         IMAGE_NAME: aqibjavaid817/sadat-app
       run: |
-        docker buildx create --use
+        docker build -t $IMAGE_NAME .
+        #docker buildx create --use
         docker push $IMAGE_NAME
         #docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/$IMAGE_NAME --push .
 
