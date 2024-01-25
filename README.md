@@ -1,56 +1,53 @@
-# System Admin / DevOps Engineer Test
+**Dockerized PHP Application with MySQL and Redis**
+This repository contains the configuration and files necessary to build and deploy a Dockerized PHP application with MySQL and Redis. The continuous integration process is automated using GitHub Actions, and the deployment is targeted to an EC2 instance.
 
-## IMPORTANT:
-- Deadline is usually +3 days (12NN +4GMT) from the moment the test was sent to you (Example: If sent on Monday, deadline is Thursday at 12NN +4GMT).
-- Ouput that needs to be sent to us:
-    - Working URL of the app that can be accessible online.
-    - Upload the project to your own repo and send us the link (optional but highly recommended as this will be discussed during the next phase of the interview).
-- Describe extra step that you took to make your output outstanding compare to other candidates (Example: setting up SSL, LB, etc...)
+**Contents**
+GitHub Actions Workflow
+Deployment Script
+Dockerfiles
+Docker Compose
+Deployment Steps
+Notes
+GitHub Actions Workflow
+The ** .github/workflows/main.yml** file defines a GitHub Actions workflow for continuous integration. It performs the following steps:
 
-### Test assignment A: Docker and Microservices
-**Objective:** To assess the candidate’s ability to work with Docker and microservices architecture.
+Checks out the repository code.
+Sets up Docker Buildx and QEMU for multi-platform builds.
+Builds and pushes Docker images to Docker Hub using the specified Docker Compose file.
+Installs sshpass to enable non-interactive SSH login.
+Establishes an SSH connection to the EC2 instance and executes a deployment script.
+**Deployment Script**
 
-**Task Description:**
-- This app includes App (PHP), MySQL and Redis services.
-- Containerize these services using Docker. Each service should have its own Dockerfile.
-- Write a docker-compose.yml file to orchestrate the services.
-- Ensure that the services can communicate with each other and are scalable.
-- Document the steps to build and run the containers, and any assumptions made in the process.
-- Send us the repo link (optional but highly recommended).
+The **deploy.sh** script located in the root directory of the project is responsible for deploying the Docker containers on the EC2 instance. It performs the following actions:
 
-**Evaluation Criteria:**
-- Understanding of Docker concepts and containerization.
-- Ability to set up a microservices architecture.
-- Quality of the Dockerfiles and docker-compose configurations.
-- Documentation and clarity of instructions.
+Navigates to the project directory on the EC2 instance.
+Pulls the latest changes from the Git repository.
+Runs **docker-compose up -d** to start or restart the Docker containers.
+**Dockerfiles**
+**PHP Application Dockerfile (Dockerfile)**
+Based on php:8.1.2-cli.
+Sets up the working directory and copies application files.
+Installs necessary dependencies (zip, unzip).
+Installs Composer and runs composer install.
+Exposes port 8000.
+Defines the CMD to start the PHP built-in server.
+**MySQL Dockerfile (Dockerfile.mysql)**
+Based on mysql:latest.
+Sets the root password and initializes a database.
+**Redis Dockerfile (Dockerfile.redis)**
+Based on ubuntu:22.04.
+Installs and exposes the Redis server.
+**Docker Compose**
+The docker-compose.yml file orchestrates the setup of three services: php_app, mysql, and redis. It specifies the build context for each service and defines the necessary configurations, such as ports and environment variables.
 
-### Test assignment B: Continuous Integration/Continuous Deployment (CI/CD)
-**Objective:** To evaluate the candidate's experience with CI/CD pipelines and version control systems.
+**Deployment Steps**
+Continuous Integration:
 
-**Task Description:**
-- Using the output from Test A. 
-- Create a CI/CD pipeline using a tool like Jenkins, GitLab CI, or GitHub Actions (The pipeline should include stages for building, testing, and deploying the application).
-- Document the CI/CD setup and provide instructions on how the pipeline works, including how to trigger builds and deployments.
+Push changes to the main branch.
+GitHub Actions will automatically trigger the workflow, building and pushing Docker images.
+Deployment:
 
-**Evaluation Criteria:**
-- Proficiency in using version control (Git).
-- Ability to set up and configure CI/CD pipelines.
-- Understanding of automated testing and its integration into CI/CD.
-- Documentation quality and the ability to explain the CI/CD process.
-
-### Test assignment C: Deployment to a Cloud or Server Environment
-**Objective:**  To assess the candidate’s ability to deploy applications to a cloud or server environment, integrating the work done in Test B.
-
-**Task Description:**
-- Take the CI/CD pipeline and the web application developed in Test B (If you are not familiar with CI/CD, you may use output from Test A instead).
-- Extend the CI/CD pipeline to include a deployment stage that automatically deploys the application to a cloud provider (AWS, Azure, GCP) or a server environment of your choice.
-- Ensure the deployment includes necessary environment configurations (like virtual networks, security groups, etc.) and is scalable.
-- Implement basic monitoring and logging for the application in the cloud/server environment.
-- Document the deployment process, including any scripts or configuration files used, and instructions on how to access the deployed application.
-
-**Evaluation Criteria:**
-- Ability to integrate deployment into an existing CI/CD pipeline.
-- Understanding of cloud services and server management (depending on the deployment target).
-- Implementation of security best practices in the deployment.
-- Setup of basic monitoring and logging for the application.
-- Quality of documentation and ease of accessing the deployed application.
+Ensure the EC2 instance has Docker installed.
+Set up Docker Compose on the EC2 instance.
+Create a .env file on the EC2 instance with necessary environment variables.
+Run the deploy.sh script on the EC2 instance.
